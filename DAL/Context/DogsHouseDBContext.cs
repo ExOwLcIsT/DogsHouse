@@ -1,13 +1,13 @@
-using Domain.Models;
+using DogsHouse.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace DAL.Context
+namespace DogsHouse.Context
 {
-    public class DogsHouseDBContext : DbContext
+    public class DogsHouseDbContext : DbContext
     {
         public DbSet<Dog> Dogs { get; set; }
-        public DogsHouseDBContext(DbContextOptions<DogsHouseDBContext> options) : base(options)
+        public DogsHouseDbContext(DbContextOptions<DogsHouseDbContext> options) : base(options)
         {
             Database.EnsureCreated();
         }

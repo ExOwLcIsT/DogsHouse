@@ -1,9 +1,7 @@
-using System.Linq;
-using DAL.Context;
-using Domain.Models;
+using DogsHouse.Services;
+using DogsHouse.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using DogsHouse.Interfaces;
 
 namespace DogsHouse.Controllers;
 
@@ -11,57 +9,22 @@ namespace DogsHouse.Controllers;
 [Route("")]
 public class DogsController : ControllerBase
 {
+    private readonly IDogsService dogsService;
 
-    private readonly ILogger<DogsController> _logger;
-
-    private readonly DogsHouseDBContext _context;
-
-    public DogsController(ILogger<DogsController> logger, DogsHouseDBContext context)
+    public DogsController(IDogsService dogsService)
     {
-        _logger = logger;
-        _context = context;
+        this.dogsService = dogsService;
     }
 
     [HttpGet]
 
     [Route("/dogs")]
-    public async Task<IActionResult> Dogs([FromQuery] string? attribute, [FromQuery] string? order, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> Dogs([FromQuery] string? attribute = null,
+     [FromQuery] string? order = null,
+      [FromQuery] int pageNumber = 1,
+       [FromQuery] int pageSize = 10)
     {
-        var result = _context.Dogs.AsQueryable();
-
-        //sorting
-
-        if (!string.IsNullOrWhiteSpace(attribute))
-        {
-            switch (attribute)
-            {
-                case "name":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.name) : result.OrderBy((d) => d.name);
-                        break;
-                    }
-                case "color":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.color) : result.OrderBy((d) => d.color);
-                        break;
-                    }
-                case "tail_length":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.tail_length) : result.OrderBy((d) => d.tail_length);
-                        break;
-                    }
-                case "weight":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.weight) : result.OrderBy((d) => d.weight);
-                        break;
-                    }
-            }
-        }
-
-        //Paginating
-
-        result = result.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+        var result = await dogsService.GetSortedAndPaginatedDogs(attribute, order, pageNumber, pageSize);
         return Ok(result);
     }
 
@@ -69,9 +32,7 @@ public class DogsController : ControllerBase
     [Route("/dog")]
     public async Task<IActionResult> CreateDog([FromBody] Dog dog)
     {
-        await _context.AddAsync(dog);
-        await _context.SaveChangesAsync();
+        await dogsService.CreateDog(dog);
         return StatusCode(201);
     }
-
 }

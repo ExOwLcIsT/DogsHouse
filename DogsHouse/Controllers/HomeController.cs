@@ -9,13 +9,11 @@ namespace DogsHouse.Controllers;
 [Route("")]
 public class HomeController : ControllerBase
 {
-private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController()
     {
-        _logger = logger;
     }
-    
+
     [HttpGet("ping")]
     public async Task<IActionResult> Ping()
     {

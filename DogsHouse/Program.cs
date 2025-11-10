@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using DAL.Context;
+using DogsHouse.Context;
 using Microsoft.Data.SqlClient;
+using DogsHouse.Interfaces;
+using DogsHouse.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +18,8 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DataBase");
 
 
-builder.Services.AddDbContext<DogsHouseDBContext>(x => x.UseSqlServer(connectionString));
+builder.Services.AddDbContext<DogsHouseDbContext>(x => x.UseSqlServer(connectionString));
+builder.Services.AddTransient<IDogsService, DogsService>();
 
 var app = builder.Build();
 
