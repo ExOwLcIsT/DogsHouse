@@ -32,6 +32,9 @@ public class DogsController : ControllerBase
     [Route("/dog")]
     public async Task<IActionResult> CreateDog([FromBody] Dog dog)
     {
+
+        //TODO
+        //Validate passed data
         await dogsService.CreateDog(dog);
         return StatusCode(201);
     }

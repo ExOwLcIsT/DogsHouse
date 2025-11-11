@@ -5392,11 +5392,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\programming\\Codebridge_testTask\\DogsHouse\\DogsHouse.csproj",
+      "projectUniqueName": "D:\\programming\\Codebridge_testTask\\DogsHouse\\DogsHouse.csproj",
       "projectName": "DogsHouse",
-      "projectPath": "d:\\programming\\Codebridge_testTask\\DogsHouse\\DogsHouse.csproj",
+      "projectPath": "D:\\programming\\Codebridge_testTask\\DogsHouse\\DogsHouse.csproj",
       "packagesPath": "C:\\Users\\Vlad\\.nuget\\packages\\",
-      "outputPath": "d:\\programming\\Codebridge_testTask\\DogsHouse\\obj\\",
+      "outputPath": "D:\\programming\\Codebridge_testTask\\DogsHouse\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Vlad\\AppData\\Roaming\\NuGet\\NuGet.Config"
