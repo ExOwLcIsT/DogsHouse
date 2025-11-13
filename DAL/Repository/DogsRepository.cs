@@ -8,6 +8,6 @@ public class DogsRepository : BaseRepository<Dog>
 {
     public DogsRepository(DogsHouseDbContext context) : base(context)
     {
-
+        
     }
 }

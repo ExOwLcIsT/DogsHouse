@@ -36,7 +36,7 @@ public class DogsController : ControllerBase
         try
         {
             await dogsService.CreateDog(dog);
-            return StatusCode(201);
+            return StatusCode(201, dog);
         }
         catch (ArgumentException ae)
         {

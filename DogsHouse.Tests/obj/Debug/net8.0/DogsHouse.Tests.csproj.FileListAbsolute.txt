@@ -178,3 +178,4 @@ D:\programming\Codebridge_testTask\DogsHouse.Tests\obj\Debug\net8.0\ref\DogsHous
 D:\programming\Codebridge_testTask\DogsHouse.Tests\bin\Debug\net8.0\Moq.dll
 D:\programming\Codebridge_testTask\DogsHouse.Tests\bin\Debug\net8.0\BLL.dll
 D:\programming\Codebridge_testTask\DogsHouse.Tests\bin\Debug\net8.0\BLL.pdb
+D:\programming\Codebridge_testTask\DogsHouse.Tests\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.InMemory.dll

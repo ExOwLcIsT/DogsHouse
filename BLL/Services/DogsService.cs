@@ -4,23 +4,24 @@ using Domain.Models;
 using DAL.Repository.Interfaces;
 using DAL.Repository;
 using Domain.Attributes;
+using DAL.Repository.UnitOfWork;
 
 namespace BLL.Services;
 
 public class DogsService : IDogsService
 {
 
-    private readonly DogsRepository dogsRepository;
+    private readonly IUnitOfWork unitOfWork;
 
-    public DogsService(DogsRepository dogsRepository)
+    public DogsService(IUnitOfWork unitOfWork)
     {
-        this.dogsRepository = dogsRepository;
+        this.unitOfWork = unitOfWork;
     }
 
 
     public async Task<IEnumerable<Dog>> GetSortedAndPaginatedDogs(string? attribute, string? order, int pageNumber, int pageSize)
     {
-        var dogs = await dogsRepository.GetAllAsync();
+        var dogs = await unitOfWork.Dogs.GetAllAsync();
 
         //sorting
 
@@ -51,11 +52,11 @@ public class DogsService : IDogsService
 
     public async Task CreateDog(Dog dog)
     {
-        if (await dogsRepository.AnyAsync(d => d.name.Equals(dog.name)))
+        if (await unitOfWork.Dogs.AnyAsync(d => d.name.Equals(dog.name)))
         {
             throw new ArgumentException("Dog`s name must be unique");
         }
-        await dogsRepository.CreateAsync(dog);
-        await dogsRepository.SaveChangesAsync();
+        await unitOfWork.Dogs.CreateAsync(dog);
+        await unitOfWork.Dogs.SaveChangesAsync();
     }
 }
