@@ -5,6 +5,8 @@ using BLL.Services;
 using System.Threading.RateLimiting;
 using DogsHouse.Options;
 using DAL.Repository;
+using DAL.Repository.Interfaces;
+using DAL.Repository.UnitOfWork;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,5 +70,6 @@ void ConfiguarationService(IServiceCollection services)
     );
     builder.Services.AddDbContext<DogsHouseDbContext>(x => x.UseSqlServer(connectionString));
     builder.Services.AddTransient<DogsRepository>();
+    builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
     builder.Services.AddTransient<IDogsService, DogsService>();
 }
