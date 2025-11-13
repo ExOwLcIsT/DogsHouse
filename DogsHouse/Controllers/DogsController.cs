@@ -1,7 +1,7 @@
-using DogsHouse.Services;
-using DogsHouse.Models;
+using BLL.Services;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
-using DogsHouse.Interfaces;
+using BLL.Interfaces;
 
 namespace DogsHouse.Controllers;
 
@@ -33,9 +33,14 @@ public class DogsController : ControllerBase
     public async Task<IActionResult> CreateDog([FromBody] Dog dog)
     {
 
-        //TODO
-        //Validate passed data
-        await dogsService.CreateDog(dog);
-        return StatusCode(201);
+        try
+        {
+            await dogsService.CreateDog(dog);
+            return StatusCode(201);
+        }
+        catch (ArgumentException ae)
+        {
+            return BadRequest(new { message = ae.Message });
+        }
     }
 }

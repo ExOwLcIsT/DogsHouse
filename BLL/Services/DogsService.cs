@@ -1,63 +1,61 @@
-using DogsHouse.Context;
-using DogsHouse.Interfaces;
-using DogsHouse.Models;
+using DAL.Context;
+using BLL.Interfaces;
+using Domain.Models;
+using DAL.Repository.Interfaces;
+using DAL.Repository;
+using Domain.Attributes;
 
-namespace DogsHouse.Services;
+namespace BLL.Services;
 
 public class DogsService : IDogsService
 {
-    private readonly DogsHouseDbContext _context;
 
-    public DogsService(DogsHouseDbContext context)
+    private readonly DogsRepository dogsRepository;
+
+    public DogsService(DogsRepository dogsRepository)
     {
-        _context = context;
+        this.dogsRepository = dogsRepository;
     }
 
 
     public async Task<IEnumerable<Dog>> GetSortedAndPaginatedDogs(string? attribute, string? order, int pageNumber, int pageSize)
     {
-        var result = _context.Dogs.AsQueryable();
+        var dogs = await dogsRepository.GetAllAsync();
 
         //sorting
 
-        if (!string.IsNullOrWhiteSpace(attribute))
+
+
+        if (!string.IsNullOrWhiteSpace(attribute) && Enum.TryParse<Attributes>(attribute, true, out var sortAttr))
         {
-            switch (attribute)
+            dogs = (sortAttr switch
             {
-                case "name":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.name) : result.OrderBy((d) => d.name);
-                        break;
-                    }
-                case "color":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.color) : result.OrderBy((d) => d.color);
-                        break;
-                    }
-                case "tail_length":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.tail_length) : result.OrderBy((d) => d.tail_length);
-                        break;
-                    }
-                case "weight":
-                    {
-                        result = order == "desc" ? result.OrderByDescending((d) => d.weight) : result.OrderBy((d) => d.weight);
-                        break;
-                    }
-            }
+                Attributes.name => (order == "desc" ? dogs.OrderByDescending((d) => d.name) : dogs.OrderBy((d) => d.name)).ToList(),
+
+                Attributes.color => (order == "desc" ? dogs.OrderByDescending((d) => d.color) : dogs.OrderBy((d) => d.color)).ToList(),
+
+                Attributes.tail_length => (order == "desc" ? dogs.OrderByDescending((d) => d.tail_length) : dogs.OrderBy((d) => d.tail_length)).ToList(),
+
+                Attributes.weight => (order == "desc" ? dogs.OrderByDescending((d) => d.weight) : dogs.OrderBy((d) => d.weight)).ToList(),
+                _ => dogs,
+            });
         }
 
         //Paginating
 
-        result = result.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        dogs = dogs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-        return result;
+        return dogs;
     }
 
 
     public async Task CreateDog(Dog dog)
     {
-        await _context.AddAsync(dog);
-        await _context.SaveChangesAsync();
+        if (await dogsRepository.AnyAsync(d => d.name.Equals(dog.name)))
+        {
+            throw new ArgumentException("Dog`s name must be unique");
+        }
+        await dogsRepository.CreateAsync(dog);
+        await dogsRepository.SaveChangesAsync();
     }
 }

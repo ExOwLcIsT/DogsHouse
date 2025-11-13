@@ -1,8 +1,8 @@
-using DogsHouse.Models;
+using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace DogsHouse.Context
+namespace DAL.Context
 {
     public class DogsHouseDbContext : DbContext
     {
